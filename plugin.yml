@@ -1,0 +1,11 @@
+name: SpellChecker
+description: Spellchecks files matching the provided pattern.
+author: https://github.com/fruglemonkey
+requirements: []
+configuration:
+    properties:
+        pattern:
+            type: string
+        required:
+            - pattern
+    additionalProperties: false
