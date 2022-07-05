@@ -35,7 +35,7 @@ if [[ "${SORTED_AND_DEDUPED_WORDS}" == "" ]]; then
   exit 0
 else
   echo "${SORTED_AND_DEDUPED_WORDS}"
-  buildkite-agent annotate "The following spelling errors were found: ${WORDS}"
+  buildkite-agent annotate "The following spelling errors were found in these files (${FILES}) - ${WORDS}"
   # Could exit non-zero here but that'd be harsh.
   exit 0
 fi
