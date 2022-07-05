@@ -12,3 +12,9 @@ steps:
       - fruglemonkey/test#v0.4:
           pattern: '*.md'
 ```
+
+## Tests
+
+Clone the repo, and fetch all submodules via `git submodule update --init --recursive`.
+
+Then run `test/bats/bin/bats test/post-command.bats` in the repo root directory.
