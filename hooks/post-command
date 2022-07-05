@@ -1,0 +1,41 @@
+#!/bin/bash
+# vi: syntax=sh
+
+# Don't set -u initially since IGNORE_PATTERN isn't mandatory.
+set -eo pipefail
+
+WORDS=""
+IGNORE_PATTERN="${BUILDKITE_PLUGIN_TEST_IGNORE_PATTERN}"
+
+# Now that we're moving into main logic, set -u on.
+set -u
+PATTERN="${BUILDKITE_PLUGIN_TEST_PATTERN}"
+
+if [[ -z "${IGNORE_PATTERN}" ]]; then
+  FILES=$(find ./ -path "${PATTERN}" -type f)
+else
+  FILES=$(find ./ -path "${PATTERN}" ! -path "${IGNORE_PATTERN}" -type f)
+fi
+
+echo "--- :pencil: Running spellcheck..."
+
+if [[ -z "${FILES}" ]]; then
+  buildkite-agent annotate "No files matched the provided pattern for spellchecking"
+  exit 0
+fi
+for file in "${FILES}"; do
+  WORDS="${WORDS} $(cat ${file} | docker run -i starefossen/aspell list| xargs)"
+done
+
+SORTED_AND_DEDUPED_WORDS=$(echo ${WORDS} | tr " " "\n" | sort -u | tr "\n" " "| xargs)
+
+if [[ "${SORTED_AND_DEDUPED_WORDS}" == "" ]]; then
+  echo "Found no misspelled words!"
+  buildkite-agent annotate "Found no misspelled words!"
+  exit 0
+else
+  echo "${SORTED_AND_DEDUPED_WORDS}"
+  buildkite-agent annotate "The following spelling errors were found: ${WORDS}"
+  # Could exit non-zero here but that'd be harsh.
+  exit 0
+fi

@@ -6,6 +6,8 @@ configuration:
     properties:
         pattern:
             type: string
-        required:
-            - pattern
+        ignore_pattern:
+            type: string
+    required:
+        - pattern
     additionalProperties: false
