@@ -20,16 +20,17 @@ fi
 echo "--- :pencil: Running spellcheck..."
 
 if [[ -z "${FILES}" ]]; then
+  echo "No files matched the provided pattern for spellchecking"
   buildkite-agent annotate "No files matched the provided pattern for spellchecking"
   exit 0
 fi
 for file in "${FILES}"; do
-  WORDS="${WORDS} $(cat ${file} | docker run -i starefossen/aspell list| xargs)"
+  WORDS="${WORDS} $(cat ${file} | docker run -i starefossen/aspell list)"
 done
 
-SORTED_AND_DEDUPED_WORDS=$(echo ${WORDS} | tr " " "\n" | sort -u | tr "\n" " "| xargs)
+SORTED_AND_DEDUPED_WORDS=$(echo ${WORDS} | tr " " "\n" | sort -u | tr "\n" " ")
 
-if [[ "${SORTED_AND_DEDUPED_WORDS}" == "" ]]; then
+if [[ "${SORTED_AND_DEDUPED_WORDS}" == " " ]]; then
   echo "Found no misspelled words!"
   buildkite-agent annotate "Found no misspelled words!"
   exit 0
