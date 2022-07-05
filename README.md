@@ -9,6 +9,6 @@ Simple spellchecking plugin to test buildkite plugin capability.
 steps:
   - command: ls
     plugins:
-      - fruglemonkey/test#v0.1:
+      - fruglemonkey/test#v0.2:
           pattern: '*.md'
 ```
